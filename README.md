@@ -7,11 +7,13 @@ A preconfigured VS Code Dev Container / Codespace for developing WebAssembly-bas
 ### Local Development (Recommended for testing)
 
 1. **Prerequisites**
+
    - Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
    - Install [VS Code](https://code.visualstudio.com/)
    - Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 2. **Open in Container**
+
    - Open this folder in VS Code
    - Press `F1` → **"Dev Containers: Reopen in Container"**
    - Wait for the container to build (first time takes ~5 minutes)
@@ -24,6 +26,7 @@ A preconfigured VS Code Dev Container / Codespace for developing WebAssembly-bas
 ### GitHub Codespaces (Cloud)
 
 Once you've tested locally:
+
 1. Push this repo to GitHub
 2. Click "Code" → "Codespaces" → "Create codespace on main"
 3. Your dev environment will be ready in the cloud!
@@ -55,6 +58,7 @@ Once you've tested locally:
 ### Building WASM Apps
 
 **JavaScript/TypeScript:**
+
 ```bash
 npm install @gcoredev/fastedge-sdk-js
 # Write your code
@@ -62,6 +66,7 @@ npm install @gcoredev/fastedge-sdk-js
 ```
 
 **Rust:**
+
 ```bash
 cargo new --lib my-app
 cd my-app
@@ -105,12 +110,14 @@ wasm-pack --version
 ## 🔧 Customization
 
 Edit `.devcontainer/devcontainer.json` to:
+
 - Add more VS Code extensions
 - Install additional tools
 - Configure port forwarding
 - Set environment variables
 
 Edit `.devcontainer/setup.sh` to:
+
 - Add custom build tools
 - Pre-install dependencies
 - Configure shell environment
@@ -125,6 +132,7 @@ Edit `.devcontainer/setup.sh` to:
 ## 🚢 Publishing to GitHub
 
 When ready to share:
+
 ```bash
 git init
 git add .

@@ -11,14 +11,15 @@
       "profile": "minimal"
     },
     "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": true,
-      "installOhMyZsh": true,
-      "upgradePackages": true,
+      "installZsh": false,
+      "installOhMyZsh": false,
+      "upgradePackages": false,
       "username": "vscode"
     }
   },
 
-  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "onCreateCommand": "bash .devcontainer/setup.sh",
+  "updateContentCommand": "cd my-fastedge-app && npm install",
 
   "customizations": {
     "vscode": {
