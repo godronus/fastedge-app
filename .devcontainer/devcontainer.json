@@ -1,0 +1,55 @@
+{
+  "name": "FastEdge Application Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/rust:latest",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/devcontainers/features/rust:1": {
+      "version": "latest",
+      "profile": "minimal"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "vscode"
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "g-corelabssa.fastedge",
+        "tamasfe.even-better-toml",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "rust-analyzer.checkOnSave.command": "clippy",
+        "rust-analyzer.cargo.target": "wasm32-wasip1",
+        "editor.formatOnSave": true,
+        "mcp.servers": {
+          // "fastedge": {
+          //   "command": "npx",
+          //   "args": ["@your-company/fastedge-mcp"]
+          // }
+        }
+      }
+    }
+  },
+
+  "remoteUser": "vscode",
+
+  "forwardPorts": [3000, 8080],
+  "portsAttributes": {
+    "3000": {
+      "label": "Preview",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}
