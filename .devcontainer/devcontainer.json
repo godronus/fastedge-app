@@ -1,13 +1,30 @@
 {
   "name": "FastEdge Application Dev Environment",
+  "image": "ghcr.io/godronus/fastedge-app/base:latest",
 
-  // Use Dockerfile to enable GitHub Codespaces prebuilds
-  "build": {
-    "dockerfile": "Dockerfile"
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24.12.0"
+    },
+    "ghcr.io/devcontainers/features/rust:1": {
+      "version": "latest",
+      "profile": "minimal"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "installOhMyZsh": false,
+      "upgradePackages": false,
+      "username": "vscode"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "installDirectlyFromGitHubRelease": true,
+      "version": "latest"
+    }
   },
 
-  // Install extension after container is created (lightweight, ~2 seconds)
+  "onCreateCommand": "bash .devcontainer/setup.sh",
   "postCreateCommand": "code --install-extension ${containerWorkspaceFolder}/.devcontainer/fastedge-0.1.0.vsix",
+  // "updateContentCommand": "cd my-fastedge-app && npm install",
 
   "customizations": {
     "vscode": {
