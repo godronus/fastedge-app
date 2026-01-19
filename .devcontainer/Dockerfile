@@ -8,4 +8,6 @@ USER vscode
 # Add any project-specific lightweight setup here
 # (empty for now - base image has everything)
 
+# probably want to try and install pnpm here??? @gcoredev/fastedge-sdk-js?
+
 WORKDIR /workspaces
