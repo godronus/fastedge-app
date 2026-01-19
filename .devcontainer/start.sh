@@ -23,7 +23,6 @@ case $choice in
     npm init -y
     npm install @gcoredev/fastedge-sdk-js
     cat > index.js << 'EOF'
-import { addEventListener } from '@gcoredev/fastedge-sdk-js';
 
 addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request));
