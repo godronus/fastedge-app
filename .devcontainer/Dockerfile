@@ -1,30 +1,11 @@
-# Use official devcontainer base image with Node and Rust
-FROM mcr.microsoft.com/devcontainers/base:debian
+# Use pre-built base image with all heavy dependencies
+# This image is built separately and contains: Node.js 24, Rust, WASM targets
+FROM ghcr.io/godronus/fastedge-app/base:latest
 
-# Switch to root for installations
-USER root
-
-# Install Node.js 24
-RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
-    apt-get update && apt-get install -y --no-install-recommends \
-    nodejs \
-    build-essential \
-    curl \
-    ca-certificates \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Rust for vscode user
+# Lightweight customizations only (fast!)
 USER vscode
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
-    . "$HOME/.cargo/env" && \
-    rustup target add wasm32-wasip1 && \
-    rustup target add wasm32-unknown-unknown && \
-    rustup component add rust-analyzer rustfmt clippy
 
-# Set up environment
-ENV PATH="/home/vscode/.cargo/bin:${PATH}"
+# Add any project-specific lightweight setup here
+# (empty for now - base image has everything)
 
-# Back to vscode user
-USER vscode
 WORKDIR /workspaces

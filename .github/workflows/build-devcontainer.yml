@@ -1,4 +1,4 @@
-name: Prebuild DevContainer
+name: Create Codespaces Prebuild
 
 on:
   push:
@@ -7,6 +7,9 @@ on:
       - ".devcontainer/**"
       - ".github/workflows/build-devcontainer.yml"
   workflow_dispatch:
+
+# This creates prebuilds using the heavy base image
+# Users get instant startup (10-20 seconds)
 
 jobs:
   prebuild:

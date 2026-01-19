@@ -1,0 +1,36 @@
+# BASE IMAGE - Contains all heavy dependencies
+# Only rebuilt when you change dependencies
+# Used by .devcontainer/Dockerfile
+
+FROM mcr.microsoft.com/devcontainers/base:debian
+
+# Switch to root for installations
+USER root
+
+# Install Node.js 24 (heavy - takes time)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    nodejs \
+    build-essential \
+    curl \
+    ca-certificates \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Switch to vscode user
+USER vscode
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Install Rust with WASM targets (heavy - takes 2-3 minutes)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
+    . "$HOME/.cargo/env" && \
+    rustup target add wasm32-wasip1 && \
+    rustup component add rust-analyzer rustfmt clippy
+
+# Set up environment
+ENV PATH="/home/vscode/.cargo/bin:${PATH}"
+
+USER vscode
+WORKDIR /workspaces
