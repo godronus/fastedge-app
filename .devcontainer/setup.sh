@@ -16,14 +16,6 @@ echo "📦 Installing Rust WASM targets..."
 rustup target add wasm32-wasip1 2>/dev/null || echo "  ↳ wasm32-wasip1 already installed"
 rustup target add wasm32-unknown-unknown 2>/dev/null || echo "  ↳ wasm32-unknown-unknown already installed"
 
-# Install wasm-pack for Rust->WASM builds (check if exists)
-if ! command -v wasm-pack &> /dev/null; then
-    echo "📦 Installing wasm-pack..."
-    cargo install wasm-pack
-else
-    echo "📦 wasm-pack already installed (skipping)"
-fi
-
 # Install FastEdge SDK (check if exists)
 if ! npm list -g @gcoredev/fastedge-sdk-js &> /dev/null; then
     echo "📦 Installing FastEdge SDK..."
@@ -41,8 +33,6 @@ if ! command -v wasmtime &> /dev/null; then
     if ! grep -q "wasmtime/bin" ~/.bashrc; then
         echo 'export PATH="$HOME/.wasmtime/bin:$PATH"' >> ~/.bashrc
     fi
-else
-    echo "📦 wasmtime already installed (skipping)"
 fi
 
 # Create marker file
@@ -52,7 +42,5 @@ echo "✅ Setup complete!"
 echo ""
 echo "🎯 Available commands:"
 echo "  - rustc --target wasm32-wasip1    # Compile Rust to WASM"
-echo "  - wasm-pack build                  # Build Rust WASM packages"
-echo "  - wasmtime run <file.wasm>        # Test WASM locally"
 echo ""
 echo "💡 Next: Run 'bash .devcontainer/start.sh' to create a new FastEdge app"
