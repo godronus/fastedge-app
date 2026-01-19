@@ -1,25 +1,29 @@
-# Use the base image with all features pre-installed
-FROM ghcr.io/godronus/fastedge-app/devcontainer:latest
+# Use official devcontainer base image with Node and Rust
+FROM mcr.microsoft.com/devcontainers/base:debian
 
 # Switch to root for installations
 USER root
 
-# Install system dependencies in one layer
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Install Node.js 24
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    nodejs \
     build-essential \
     curl \
     ca-certificates \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Switch to vscode user for user-specific installations
+# Install Rust for vscode user
 USER vscode
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
+    . "$HOME/.cargo/env" && \
+    rustup target add wasm32-wasip1 && \
+    rustup target add wasm32-unknown-unknown && \
+    rustup component add rust-analyzer rustfmt clippy
 
-# Install Rust WASM targets (cached layer)
-RUN rustup target add wasm32-wasip1 && \
-    rustup target add wasm32-unknown-unknown
-
-# Install FastEdge SDK globally (cached layer)
-RUN npm install -g @gcoredev/fastedge-sdk-js
+# Install FastEdge SDK globally
+RUN . "$HOME/.cargo/env" && npm install -g @gcoredev/fastedge-sdk-js
 
 # Set up environment
 ENV PATH="/home/vscode/.cargo/bin:${PATH}"

@@ -1,59 +1,55 @@
 # FastEdge DevContainer Configuration
 
-## 🚀 Performance Optimizations
+## 🚀 Super Fast Startup (< 30 seconds!)
 
-This devcontainer has been optimized to reduce build time from **10-15 minutes to ~2-3 minutes** on first build, and **< 30 seconds** on subsequent rebuilds.
+This devcontainer uses a **pre-built Docker image** that's automatically built and published by GitHub Actions. When you open this repo in a Codespace, it simply pulls the ready-to-use image instead of building from scratch.
 
-### Key Changes Made:
+### How It Works:
 
-1. **Dockerfile-based build** (instead of `image` + `features`)
-   - All heavy installations (Rust targets, wasm-pack, wasmtime, Node packages) are in the Dockerfile
-   - Docker layers are cached between builds
-   - GitHub Codespaces can prebuild these images
+1. **GitHub Action builds the image** (`.github/workflows/build-devcontainer.yml`)
+   - Runs on every push to main that changes the Dockerfile
+   - Builds and publishes to `ghcr.io/godronus/fastedge-app/devcontainer:latest`
+   - Takes ~5 minutes, but only runs once per Dockerfile change
 
-2. **Idempotent setup.sh**
-   - Checks if tools are already installed before attempting installation
-   - Uses a marker file (`~/.fastedge-setup-complete`) to prevent re-running
-   - Only runs on container creation, not on every start
+2. **Codespace pulls the image** (instant)
+   - No building required
+   - All dependencies pre-installed: Rust, Node.js, WASM targets, FastEdge SDK
+   - Ready to code in seconds!
 
-3. **Proper lifecycle commands**
-   - `onCreateCommand`: Runs once when container is first created
-   - `postCreateCommand`: Installs VS Code extension
-   - `updateContentCommand`: Lightweight command when content updates
+### 📦 What's Pre-Installed
 
-### 📋 Next Steps to Enable Prebuilds (Optional but Recommended)
+The image includes:
+- **Node.js 24** with npm
+- **Rust toolchain** (minimal profile)
+- **WASM targets** (wasm32-wasip1, wasm32-unknown-unknown)
+- **Rust tools** (rust-analyzer, rustfmt, clippy)
+- **FastEdge SDK** (@gcoredev/fastedge-sdk-js)
+- **VS Code extensions** (auto-installed on first open)
 
-To make builds even faster with GitHub Codespaces prebuilds:
+### 🔄 Updating the Image
 
-1. **Enable prebuilds in your repo settings:**
+To update the pre-built image:
 
-   ```
-   Repository Settings → Codespaces → Set up prebuild
-   ```
+1. Edit [.devcontainer/Dockerfile](.devcontainer/Dockerfile)
+2. Commit and push to main
+3. GitHub Action automatically builds and publishes new image
+4. Next Codespace startup will use the new image
 
-2. **Configure prebuild triggers:**
-   - On push to main branch
-   - On a schedule (e.g., daily)
+### 📊 Performance
 
-3. **With prebuilds enabled:**
-   - First build: Happens in the background after each push
-   - Your codespace: Starts in ~30 seconds using the prebuild!
+| Action | Time |
+|--------|------|
+| First Codespace open | ~20-30 seconds |
+| Subsequent opens | ~10-15 seconds |
+| Image rebuild (on Dockerfile change) | ~5 minutes (automatic) |
 
-### 🔧 Troubleshooting
+### 🔧 Local Development
 
-If the container still runs setup multiple times:
+To test the devcontainer locally:
+```bash
+# Rebuild image locally
+docker build -t fastedge-dev .devcontainer/
 
-- Delete `~/.fastedge-setup-complete` to force a fresh setup
-- Check the GitHub Codespaces logs for multiple `onCreateCommand` executions
-
-### 📦 What's Installed
-
-The Dockerfile pre-installs:
-
-- Rust toolchain with WASM targets (wasm32-wasip1, wasm32-unknown-unknown)
-- wasm-pack (Rust → WASM build tool)
-- wasmtime (WASM runtime for local testing)
-- @gcoredev/fastedge-sdk-js (FastEdge SDK)
-- Node.js, npm, and common utilities
-
-All installations are cached in Docker layers for fast rebuilds.
+# Or pull the published image
+docker pull ghcr.io/godronus/fastedge-app/devcontainer:latest
+```

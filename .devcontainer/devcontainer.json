@@ -1,23 +1,11 @@
 {
   "name": "FastEdge Application Dev Environment",
 
-  // Build from Dockerfile to enable prebuilds and layer caching
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
-  },
+  // Use pre-built image from GitHub Actions for instant startup
+  "image": "ghcr.io/godronus/fastedge-app/devcontainer:latest",
 
-  // Remove features since they're now in the Dockerfile for better caching
-  // "features": { ... },
-
-  // Run ONLY on container creation (not on start/rebuild)
-  "onCreateCommand": "bash .devcontainer/setup.sh",
-
-  // Install extension after container is created
+  // Install extension after container is created (lightweight, ~2 seconds)
   "postCreateCommand": "code --install-extension ${containerWorkspaceFolder}/.devcontainer/fastedge-0.1.0.vsix",
-
-  // Light updates when content changes (e.g., pulling latest code)
-  "updateContentCommand": "echo 'Content updated. Run npm install if needed.'",
 
   "customizations": {
     "vscode": {

@@ -11,29 +11,8 @@ fi
 
 echo "🚀 Setting up FastEdge development environment..."
 
-# Install WASM targets for Rust (idempotent)
-echo "📦 Installing Rust WASM targets..."
-rustup target add wasm32-wasip1 2>/dev/null || echo "  ↳ wasm32-wasip1 already installed"
-rustup target add wasm32-unknown-unknown 2>/dev/null || echo "  ↳ wasm32-unknown-unknown already installed"
-
-# Install FastEdge SDK (check if exists)
-if ! npm list -g @gcoredev/fastedge-sdk-js &> /dev/null; then
-    echo "📦 Installing FastEdge SDK..."
-    npm install -g @gcoredev/fastedge-sdk-js
-else
-    echo "📦 FastEdge SDK already installed (skipping)"
-fi
-
-# Install useful WASM tools (check if exists)
-if ! command -v wasmtime &> /dev/null; then
-    echo "📦 Installing wasmtime (WASM runtime)..."
-    curl https://wasmtime.dev/install.sh -sSf | bash
-
-    # Make CLI tools available
-    if ! grep -q "wasmtime/bin" ~/.bashrc; then
-        echo 'export PATH="$HOME/.wasmtime/bin:$PATH"' >> ~/.bashrc
-    fi
-fi
+## DO any once off setup tasks here..
+## At present we have none.. just loading the prebuilt Dockerfile
 
 # Create marker file
 touch "$MARKER_FILE"
