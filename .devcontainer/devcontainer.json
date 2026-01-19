@@ -4,7 +4,7 @@
 
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "22"
+      "version": "24.12.0"
     },
     "ghcr.io/devcontainers/features/rust:1": {
       "version": "latest",
@@ -15,6 +15,10 @@
       "installOhMyZsh": false,
       "upgradePackages": false,
       "username": "vscode"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "installDirectlyFromGitHubRelease": true,
+      "version": "latest"
     }
   },
 
