@@ -20,9 +20,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
 # Switch to vscode user
 USER vscode
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Install Rust with WASM targets (heavy - takes 2-3 minutes)
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && \
     . "$HOME/.cargo/env" && \
