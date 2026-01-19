@@ -2,7 +2,7 @@
   "name": "FastEdge Application Dev Environment",
 
   // Use base image + features for flexibility
-  "image": "ghcr.io/godronus/fastedge-app/base:latest",
+  "image": "ghcr.io/godronus/fastedge-app/devcontainer:latest",
 
   // Features are installed during prebuild (once)
   // Users get instant startup because prebuild has features cached
