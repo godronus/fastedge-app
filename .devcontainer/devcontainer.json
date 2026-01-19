@@ -20,7 +20,7 @@
 
   "onCreateCommand": "bash .devcontainer/setup.sh",
   "postCreateCommand": "code --install-extension ${containerWorkspaceFolder}/.devcontainer/fastedge-0.1.0.vsix",
-  "updateContentCommand": "cd my-fastedge-app && npm install",
+  // "updateContentCommand": "cd my-fastedge-app && npm install",
 
   "customizations": {
     "vscode": {
