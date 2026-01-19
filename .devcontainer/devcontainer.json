@@ -1,30 +1,23 @@
 {
   "name": "FastEdge Application Dev Environment",
-  "image": "ghcr.io/godronus/fastedge-app/devcontainer:latest",
 
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "24.12.0"
-    },
-    "ghcr.io/devcontainers/features/rust:1": {
-      "version": "latest",
-      "profile": "minimal"
-    },
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": false,
-      "installOhMyZsh": false,
-      "upgradePackages": false,
-      "username": "vscode"
-    },
-    "ghcr.io/devcontainers/features/github-cli:1": {
-      "installDirectlyFromGitHubRelease": true,
-      "version": "latest"
-    }
+  // Build from Dockerfile to enable prebuilds and layer caching
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
 
+  // Remove features since they're now in the Dockerfile for better caching
+  // "features": { ... },
+
+  // Run ONLY on container creation (not on start/rebuild)
   "onCreateCommand": "bash .devcontainer/setup.sh",
+
+  // Install extension after container is created
   "postCreateCommand": "code --install-extension ${containerWorkspaceFolder}/.devcontainer/fastedge-0.1.0.vsix",
-  // "updateContentCommand": "cd my-fastedge-app && npm install",
+
+  // Light updates when content changes (e.g., pulling latest code)
+  "updateContentCommand": "echo 'Content updated. Run npm install if needed.'",
 
   "customizations": {
     "vscode": {
