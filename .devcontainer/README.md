@@ -19,6 +19,7 @@ This devcontainer uses a **pre-built Docker image** that's automatically built a
 ### 📦 What's Pre-Installed
 
 The image includes:
+
 - **Node.js 24** with npm
 - **Rust toolchain** (minimal profile)
 - **WASM targets** (wasm32-wasip1, wasm32-unknown-unknown)
@@ -37,15 +38,16 @@ To update the pre-built image:
 
 ### 📊 Performance
 
-| Action | Time |
-|--------|------|
-| First Codespace open | ~20-30 seconds |
-| Subsequent opens | ~10-15 seconds |
+| Action                               | Time                   |
+| ------------------------------------ | ---------------------- |
+| First Codespace open                 | ~20-30 seconds         |
+| Subsequent opens                     | ~10-15 seconds         |
 | Image rebuild (on Dockerfile change) | ~5 minutes (automatic) |
 
 ### 🔧 Local Development
 
 To test the devcontainer locally:
+
 ```bash
 # Rebuild image locally
 docker build -t fastedge-dev .devcontainer/

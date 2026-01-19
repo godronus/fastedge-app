@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - '.devcontainer/Dockerfile'
-      - '.github/workflows/build-devcontainer.yml'
+      - ".devcontainer/Dockerfile"
+      - ".github/workflows/build-devcontainer.yml"
   workflow_dispatch:
 
 env:

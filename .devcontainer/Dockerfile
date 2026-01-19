@@ -22,9 +22,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --pr
     rustup target add wasm32-unknown-unknown && \
     rustup component add rust-analyzer rustfmt clippy
 
-# Install FastEdge SDK globally
-RUN . "$HOME/.cargo/env" && npm install -g @gcoredev/fastedge-sdk-js
-
 # Set up environment
 ENV PATH="/home/vscode/.cargo/bin:${PATH}"
 

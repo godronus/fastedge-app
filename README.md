@@ -7,13 +7,11 @@ A preconfigured VS Code Dev Container / Codespace for developing WebAssembly-bas
 ### Local Development (Recommended for testing)
 
 1. **Prerequisites**
-
    - Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
    - Install [VS Code](https://code.visualstudio.com/)
    - Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 2. **Open in Container**
-
    - Open this folder in VS Code
    - Press `F1` → **"Dev Containers: Reopen in Container"**
    - Wait for the container to build (first time takes ~5 minutes)
@@ -35,11 +33,8 @@ Once you've tested locally:
 
 - **Rust** (latest) with WASM targets
   - `wasm32-wasip1` - WASI preview 1
-  - `wasm32-unknown-unknown` - Pure WASM
 - **Node.js** v22 with npm
 - **FastEdge SDK** (`@gcoredev/fastedge-sdk-js`)
-- **wasm-pack** - Build Rust → WASM packages
-- **wasmtime** - Test WASM locally
 - **VS Code Extensions**
   - Rust Analyzer
   - FastEdge extension
