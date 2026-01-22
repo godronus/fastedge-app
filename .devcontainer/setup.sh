@@ -13,6 +13,8 @@ echo "🚀 Setting up FastEdge development environment..."
 
 ## DO any once off setup tasks here..
 ## At present we have none.. just loading the prebuilt Dockerfile
+echo "🔧 Node version: $(node --version)"
+echo "🔧 Code version: $(code --version)"
 
 # Create marker file
 touch "$MARKER_FILE"
