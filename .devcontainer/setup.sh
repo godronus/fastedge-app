@@ -11,9 +11,8 @@ fi
 
 echo "🚀 Setting up FastEdge development environment..."
 
-## DO any once off setup tasks here..
-## At present we have none.. just loading the prebuilt Dockerfile
-echo "🔧 Node version: $(node --version)"
+## ADD ALL ONE TIME SETUP STEPS BELOW THIS LINE ##
+
 
 # Pre-pull MCP server Docker image for caching in prebuild
 echo "📦 Pulling FastEdge MCP server image..."
@@ -23,12 +22,15 @@ else
     echo "⚠️  Failed to pull MCP server image (may succeed on container start)"
 fi
 
+# install create-fastedge-app globally
+echo "📦 Installing create-fastedge-app globally..."
+npm install -g create-fastedge-app
+
+## ADD ALL ONE TIME SETUP STEPS ABOVE THIS LINE ##
+
 # Create marker file
 touch "$MARKER_FILE"
 
+## FINAL MESSAGES ##
+echo ""
 echo "✅ Setup complete!"
-echo ""
-echo "🎯 Available commands:"
-echo "  - rustc --target wasm32-wasip1    # Compile Rust to WASM"
-echo ""
-echo "💡 Next: Run 'bash .devcontainer/start.sh' to create a new FastEdge app"
