@@ -14,7 +14,14 @@ echo "🚀 Setting up FastEdge development environment..."
 ## DO any once off setup tasks here..
 ## At present we have none.. just loading the prebuilt Dockerfile
 echo "🔧 Node version: $(node --version)"
-echo "🔧 Code version: $(code --version)"
+
+# Pre-pull MCP server Docker image for caching in prebuild
+echo "📦 Pulling FastEdge MCP server image..."
+if docker pull ghcr.io/g-core/fastedge-mcp-server:latest; then
+    echo "✅ MCP server image cached successfully"
+else
+    echo "⚠️  Failed to pull MCP server image (may succeed on container start)"
+fi
 
 # Create marker file
 touch "$MARKER_FILE"
