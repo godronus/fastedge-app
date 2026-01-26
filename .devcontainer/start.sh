@@ -2,7 +2,7 @@
 # Interactive template selector for FastEdge Apps
 
 # Check if already initialized
-if [ -f ".devcontainer/fastedge-initialized" ]; then
+if [ -f ".devcontainer/codespace-initialized" ]; then
     exit 0
 fi
 
@@ -22,7 +22,7 @@ echo ""
 echo "Use the MCP Server! Exit this script now (Ctrl+C) and run '/createFastEdgeApp' with your favourite AI Agent."
 echo ""
 
-npm create fastedge-app .
+npm create fastedge-app . --codespaces
 
 # Mark as initialized
-touch .devcontainer/fastedge-initialized
+touch .devcontainer/codespace-initialized
