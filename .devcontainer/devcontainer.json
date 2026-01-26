@@ -45,6 +45,9 @@
           //   "command": "npx",
           //   "args": ["@your-company/fastedge-mcp"]
           // }
+        },
+        "workbench.editorAssociations": {
+          "README.md": "vscode.markdown.preview.editor"
         }
       }
     }

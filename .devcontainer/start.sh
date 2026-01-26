@@ -33,3 +33,5 @@ npx create-fastedge-app . --codespaces
 # Mark as initialized
 touch .devcontainer/.codespace-initialized
 
+# Open the README
+code README.md
