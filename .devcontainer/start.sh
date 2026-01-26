@@ -2,7 +2,13 @@
 # Interactive template selector for FastEdge Apps
 
 # Check if already initialized
-if [ -f ".devcontainer/codespace-initialized" ]; then
+if [ -f ".devcontainer/.codespace-initialized" ]; then
+    echo "╔════════════════════════════════════════════╗"
+    echo "║   FastEdge Application Codespace Started   ║"
+    echo "╚════════════════════════════════════════════╝"
+    echo ""
+    echo "👋 Welcome back! Your FastEdge application codespace is up and running again."
+    echo ""
     exit 0
 fi
 
@@ -25,4 +31,7 @@ echo ""
 npx create-fastedge-app . --codespaces
 
 # Mark as initialized
-touch .devcontainer/codespace-initialized
+touch .devcontainer/.codespace-initialized
+
+# Open the codespace README
+code CODESPACE_README.md

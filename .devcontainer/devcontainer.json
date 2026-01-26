@@ -1,6 +1,5 @@
 {
   "name": "FastEdge Application Dev Environment",
-
   // Use base image + features for flexibility
   // "image": "ghcr.io/godronus/fastedge-app/devcontainer:latest",
   "image": "mcr.microsoft.com/devcontainers/base:debian",
@@ -51,13 +50,12 @@
     }
   },
 
-  "remoteUser": "vscode",
-
-  "forwardPorts": [3000, 8080],
-  "portsAttributes": {
-    "3000": {
-      "label": "Preview",
-      "onAutoForward": "openBrowser"
+  "secrets": {
+    "GCORE_API_TOKEN": {
+      "description": "Enter your GCore API key for MCP server access"
     }
-  }
+  },
+
+  "remoteUser": "vscode",
+  "forwardPorts": [8181]
 }
