@@ -1,6 +1,11 @@
 #!/bin/bash
 # Interactive template selector for FastEdge Apps
 
+# Check if already initialized
+if [ -f ".devcontainer/fastedge-initialized" ]; then
+    exit 0
+fi
+
 echo "╔════════════════════════════════════════════╗"
 echo "║   FastEdge Application Codespace Created   ║"
 echo "╚════════════════════════════════════════════╝"
@@ -18,3 +23,6 @@ echo "Use the MCP Server! Exit this script now (Ctrl+C) and run '/createFastEdge
 echo ""
 
 npm create fastedge-app .
+
+# Mark as initialized
+touch .devcontainer/fastedge-initialized
