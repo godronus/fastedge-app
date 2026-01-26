@@ -22,7 +22,7 @@ echo ""
 echo "Use the MCP Server! Exit this script now (Ctrl+C) and run '/createFastEdgeApp' with your favourite AI Agent."
 echo ""
 
-npm create fastedge-app . --codespaces
+npx create-fastedge-app . --codespaces
 
 # Mark as initialized
 touch .devcontainer/codespace-initialized
