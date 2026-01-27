@@ -9,3 +9,27 @@ Everything you do here is contained within this one codespace. There is no repos
 The "startup" script will start shortly and help you get started coding your first application.
 
 There is also an MCP Server attached [fastedge-assistant](https://github.com/G-Core/FastEdge-mcp-server) that helps you develop (vibe-code) applications and deploy them to our network.
+
+## Next Steps
+
+To help you write code that matches the FastEdge API please use our MCP Server, it contains all of our examples and SDK knowledge within it's context.
+
+Try the co-pilot chat command:
+
+```ai
+What FastEdge tools do you have?
+```
+
+You will now see that this MCP Server can also help you deploy applications directly to the edge network.
+
+```ai
+/deployFastEdgeApp
+```
+
+## Other useful tools
+
+Apart from the [FastEdge MCP Server](https://github.com/G-Core/FastEdge-mcp-server) there is also the [FastEdge VS Code extension](https://github.com/G-Core/FastEdge-vscode) installed.
+
+This allows you to run HTTP Applications right here in the codespace / editor.
+
+Press `F1` and then type "FastEdge" to list the available commands.

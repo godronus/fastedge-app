@@ -34,7 +34,8 @@
         "rust-lang.rust-analyzer",
         "tamasfe.even-better-toml",
         "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "g-corelabssa.fastedge"
       ],
       "settings": {
         "rust-analyzer.checkOnSave.command": "clippy",
@@ -47,7 +48,7 @@
           // }
         },
         "workbench.editorAssociations": {
-          "README.md": "vscode.markdown.preview.editor"
+          "*.md": "vscode.markdown.preview.editor"
         }
       }
     }
