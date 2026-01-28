@@ -20,12 +20,47 @@ echo ""
 echo "Validating your environment..."
 # Check if GCORE_API_TOKEN is set
 if [ -z "$GCORE_API_TOKEN" ]; then
-    echo "⚠️  GCORE_API_TOKEN not found. Opening secret setup..."
+    echo "⚠️  GCORE_API_TOKEN not found. Setting up secret..."
     echo ""
+
+    # Trigger the VS Code command
     code --command "fastedge.setup-codespace-secret"
+
+    # Wait for the secret to be created (poll for up to 2 minutes)
+    echo "Waiting for secret configuration to complete..."
+    TIMEOUT=120
+    ELAPSED=0
+    SECRET_SET=false
+
+    while [ $ELAPSED -lt $TIMEOUT ]; do
+        # Check if secret exists using gh CLI
+        if gh secret list --app codespaces --user --json name 2>/dev/null | grep -q "GCORE_API_TOKEN"; then
+            SECRET_SET=true
+            break
+        fi
+        sleep 2
+        ELAPSED=$((ELAPSED + 2))
+        echo -n "."
+    done
+
+    echo ""
+
+    if [ "$SECRET_SET" = true ]; then
+        echo "✅ Secret configured successfully!"
+        echo ""
+        echo "⚠️  Note: You'll need to REBUILD the codespace for the secret to be available."
+        echo "    The secret is now saved but not yet loaded into this environment."
+        echo ""
+    else
+        echo "⏱️  Secret setup is taking longer than expected or was cancelled."
+        echo ""
+        echo "You can set it up later by:"
+        echo "1. Running: Command Palette > FastEdge (Setup Codespace Secret)"
+        echo "2. Or manually via GitHub repository Settings > Secrets > Codespaces"
+        echo ""
+    fi
 fi
-echo ""
-echo "🎉 Done! Your FastEdge codespace is ready."
+echo "🎉 Your FastEdge codespace is ready."
 echo ""
 
 # Prompt user for setup method
