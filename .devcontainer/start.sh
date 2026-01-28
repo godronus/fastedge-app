@@ -24,7 +24,7 @@ if [ -z "$GCORE_API_TOKEN" ]; then
     echo ""
 
     # Trigger the VS Code command
-    code --command "fastedge.setup-codespace-secret"
+    echo "fastedge.setup-codespace-secret" > .vscode/.fastedge-run-command
 
     # Wait for the secret to be created (poll for up to 2 minutes)
     echo "Waiting for secret configuration to complete..."
