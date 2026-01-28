@@ -38,6 +38,8 @@
         "g-corelabssa.fastedge"
       ],
       "settings": {
+        // "chat.editor.location": "sidebar",
+        // "workbench.sideBar.location": "left",
         "rust-analyzer.checkOnSave.command": "clippy",
         "rust-analyzer.cargo.target": "wasm32-wasip1",
         "editor.formatOnSave": true,

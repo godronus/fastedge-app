@@ -16,19 +16,53 @@ echo "╔═══════════════════════�
 echo "║   FastEdge Application Codespace Created   ║"
 echo "╚════════════════════════════════════════════╝"
 echo ""
+echo ""
+echo "Validating your environment..."
+# Check if GCORE_API_TOKEN is set
+if [ -z "$GCORE_API_TOKEN" ]; then
+    echo "⚠️  GCORE_API_TOKEN not found. Opening secret setup..."
+    echo ""
+    code --command "fastedge.setup-codespace-secret"
+fi
+echo ""
 echo "🎉 Done! Your FastEdge codespace is ready."
 echo ""
-echo ""
-echo "You will now be prompted to create a new FastEdge application."
-echo ""
-echo "If you prefer to set up your project manually, you can exit this script now (Ctrl+C) and create a new directory for your project."
-echo ""
-echo "OR"
-echo ""
-echo "Use the MCP Server! Exit this script now (Ctrl+C) and run '/createFastEdgeApp' with your favourite AI Agent."
-echo ""
 
-npx create-fastedge-app . --codespaces
+# Prompt user for setup method
+echo "How would you like to create your FastEdge application?"
+echo ""
+echo "1) Use AI Agent (Recommended) - Let GitHub Copilot guide you"
+echo "2) Setup Manually - Interactive CLI wizard"
+echo ""
+read -p "Enter your choice (1 or 2) [default: 1]: " setup_choice
+setup_choice=${setup_choice:-1}
+
+if [ "$setup_choice" = "1" ]; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🤖 AI Agent Setup"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "To create your FastEdge application with AI assistance:"
+    echo ""
+    echo "1. Open GitHub Copilot Chat (Ctrl+Alt+I or Cmd+Shift+I)"
+    echo "2. Type: /createFastEdgeApp"
+    echo "3. Follow the prompts to configure your application"
+    echo ""
+    echo "The AI will help you choose the right template and"
+    echo "configure your application based on your needs."
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+elif [ "$setup_choice" = "2" ]; then
+    echo ""
+    echo "Starting manual setup wizard..."
+    echo ""
+    npx create-fastedge-app . --codespaces
+else
+    echo ""
+    echo "Invalid choice. Please restart the codespace and try again."
+    exit 1
+fi
 
 # Mark as initialized
 touch .devcontainer/.codespace-initialized
