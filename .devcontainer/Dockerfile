@@ -46,23 +46,10 @@ ENV WASI_SYSROOT=/opt/wasi-sdk/share/wasi-sysroot \
   CC=/opt/wasi-sdk/bin/clang \
   CXX=/opt/wasi-sdk/bin/clang++
 
-# Install Node.js v24 (multi-architecture support)
-RUN set -e \
-  && apt-get update && apt-get install -y --no-install-recommends xz-utils \
-  && ARCH=$(dpkg --print-architecture) \
-  && case "$ARCH" in \
-       amd64) NODE_ARCH="x64" ;; \
-       arm64) NODE_ARCH="arm64" ;; \
-       *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
-     esac \
-  && echo "Downloading Node.js v24.12.0 for ${NODE_ARCH}..." \
-  && curl -fsSL https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-${NODE_ARCH}.tar.xz -o node.tar.xz \
-  && curl -fsSL https://nodejs.org/dist/v24.12.0/SHASUMS256.txt -o SHASUMS256.txt \
-  && test -f node.tar.xz || (echo "Failed to download Node.js tarball" && exit 1) \
-  && grep "node-v24.12.0-linux-${NODE_ARCH}.tar.xz" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf node.tar.xz -C /usr/local --strip-components=1 \
-  && rm node.tar.xz SHASUMS256.txt \
-  && apt-get purge --auto-remove -y xz-utils \
-  && apt-get clean && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man /tmp/* \
+# Install Node.js v24.12.0 (exact version) using NodeSource
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+  && apt-get install -y --no-install-recommends nodejs=24.12.0-1nodesource1 \
+  && apt-mark hold nodejs \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
   && npm install -g pnpm@10.26.2 \
   && node --version && npm --version && pnpm --version
