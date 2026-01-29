@@ -53,3 +53,11 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
   && npm install -g pnpm@10.26.2 \
   && node --version && npm --version && pnpm --version
+
+# Configure npm to use user-writable directory for global packages
+# This allows vscode user (and Codespace users) to run npm i -g without sudo
+RUN mkdir -p /home/vscode/.npm-global \
+  && chown -R vscode:vscode /home/vscode/.npm-global
+
+ENV NPM_CONFIG_PREFIX=/home/vscode/.npm-global \
+  PATH="/home/vscode/.npm-global/bin:$PATH"
