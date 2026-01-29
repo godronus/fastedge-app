@@ -23,13 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-paramiko libssl-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
 
-# Add LLVM repository and install Clang
-RUN apt-get update && apt-get install -y --no-install-recommends lsb-release \
-  && DISTRO=$(lsb_release -cs) \
-  && wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /usr/share/keyrings/llvm-archive-keyring.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/${DISTRO}/ llvm-toolchain-${DISTRO}-${clang_version} main" > /etc/apt/sources.list.d/llvm.list \
-  && apt-get update && apt-get install -y --no-install-recommends clang-${clang_version} \
-  && apt-get purge --auto-remove -y lsb-release \
+# Install Clang from Debian repositories
+# Debian Trixie has Clang 18+ in default repos
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  clang-${clang_version} lldb-${clang_version} lld-${clang_version} \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
 
 # Install WASI SDK for WebAssembly compilation
