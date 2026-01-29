@@ -5,7 +5,6 @@ FROM mcr.microsoft.com/devcontainers/base:debian
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG clang_version=18
-ARG distro=bookworm
 ARG wasm32_wasi_version=1.86.0
 
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -24,14 +23,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-paramiko libssl-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
 
-# Add third-party repositories and install Clang
-RUN apt-get update && apt-get install -y --no-install-recommends gpg gpg-agent \
+# Add LLVM repository and install Clang
+RUN apt-get update && apt-get install -y --no-install-recommends lsb-release software-properties-common \
+  && DISTRO=$(lsb_release -cs) \
   && wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /usr/share/keyrings/llvm-archive-keyring.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/${distro}/ llvm-toolchain-${distro}-${clang_version} main" > /etc/apt/sources.list.d/llvm.list \
-  && wget -qO - https://apt.kitware.com/keys/kitware-archive-latest.asc | gpg --dearmor -o /usr/share/keyrings/kitware-archive-keyring.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ ${distro} main" > /etc/apt/sources.list.d/kitware.list \
+  && echo "deb [signed-by=/usr/share/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/${DISTRO}/ llvm-toolchain-${DISTRO}-${clang_version} main" > /etc/apt/sources.list.d/llvm.list \
   && apt-get update && apt-get install -y --no-install-recommends clang-${clang_version} \
-  && apt-get purge --auto-remove -y gpg gpg-agent \
+  && apt-get purge --auto-remove -y lsb-release software-properties-common \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man
 
 # Install WASI SDK for WebAssembly compilation
@@ -46,9 +44,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
   && rustup --version && cargo --version && rustc --version
 
 # Set environment variables for WASI SDK
-ENV WASI_SYSROOT=/opt/wasi-sdk/share/wasi-sysroot
-ENV PATH="/opt/wasi-sdk/bin:$PATH"
-ENV CC=/opt/wasi-sdk/bin/clang \
+ENV WASI_SYSROOT=/opt/wasi-sdk/share/wasi-sysroot \
   PATH="/opt/wasi-sdk/bin:$PATH" \
   CC=/opt/wasi-sdk/bin/clang \
   CXX=/opt/wasi-sdk/bin/clang++
