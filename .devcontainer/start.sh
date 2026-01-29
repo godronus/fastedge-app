@@ -18,6 +18,9 @@ echo "╚═══════════════════════�
 echo ""
 echo ""
 echo "Validating your environment..."
+
+SECRET_SET=false
+
 # Check if GCORE_API_TOKEN is set
 if [ -z "$GCORE_API_TOKEN" ]; then
     echo "⚠️  GCORE_API_TOKEN not found. Setting up secret..."
@@ -60,6 +63,37 @@ if [ -z "$GCORE_API_TOKEN" ]; then
         echo ""
     fi
 fi
+
+# Initialize MCP Server only if GCORE_API_TOKEN is set
+if [ -n "$GCORE_API_TOKEN" ]; then
+    # Ensure Docker daemon is ready for MCP server
+    echo ""
+    echo "🔧 Initializing FastEdge MCP Server..."
+    # Wait for Docker daemon to be ready (the MCP server uses Docker)
+    until docker info >/dev/null 2>&1; do
+        echo "Waiting for Docker daemon to be ready..."
+        sleep 1
+    done
+    echo "✅ Docker daemon ready"
+    echo ""
+
+    # Trigger VS Code to reload the window to ensure MCP servers restart
+    # This ensures that if Copilot Chat was already open, it reconnects to MCP servers
+    echo "🔄 Reloading VS Code window to initialize MCP servers..."
+    echo "workbench.action.reloadWindow" > .vscode/.fastedge-run-command
+    sleep 2
+else
+    echo ""
+    if [ "$SECRET_SET" = true ]; then
+        echo "ℹ️  MCP server will be available after you rebuild the codespace"
+        echo "   (The secret is saved but not yet loaded into this session)"
+    else
+        echo "⚠️  Skipping MCP server initialization (GCORE_API_TOKEN not configured)"
+    fi
+    echo ""
+fi
+
+
 echo "🎉 Your FastEdge codespace is ready."
 echo ""
 
@@ -87,6 +121,7 @@ if [ "$setup_choice" = "1" ]; then
     echo "The AI will help you choose the right template and"
     echo "configure your application based on your needs."
     echo ""
+    echo "If the command is not recognized, please start the MCP server first by running:"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 elif [ "$setup_choice" = "2" ]; then
     echo ""
@@ -107,4 +142,6 @@ code CODESPACE_README.md
 
 # Open the README
 code README.md
+
+
 
