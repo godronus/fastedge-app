@@ -121,7 +121,7 @@ if [ "$setup_choice" = "1" ]; then
     echo "The AI will help you choose the right template and"
     echo "configure your application based on your needs."
     echo ""
-    echo "If the command is not recognized, please start the MCP server first by running:"
+    echo "If the command is not recognized, please start the MCP server (fastedge-assistant) first."
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 elif [ "$setup_choice" = "2" ]; then
     echo ""
