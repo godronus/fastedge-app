@@ -80,7 +80,7 @@ if [ -n "$GCORE_API_TOKEN" ]; then
     # Trigger VS Code to reload the window to ensure MCP servers restart
     # This ensures that if Copilot Chat was already open, it reconnects to MCP servers
     echo "🔄 Reloading VS Code window to initialize MCP servers..."
-    echo "workbench.action.reloadWindow" > .vscode/.fastedge-run-command
+    # echo "workbench.action.reloadWindow" > .vscode/.fastedge-run-command
     sleep 2
 else
     echo ""
