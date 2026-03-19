@@ -1,0 +1,14 @@
+name: codespace-setup
+version: 1.0.0
+description: Configure and use GitHub Codespace features for FastEdge development
+tags:
+  - codespace
+  - github
+  - configuration
+  - setup
+keywords:
+  - ports
+  - secrets
+  - environment
+  - vscode
+  - forwarding

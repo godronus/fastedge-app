@@ -1,147 +1,202 @@
 #!/bin/bash
-# Interactive template selector for FastEdge Apps
+# FastEdge Codespace Initialization Script
+# Prepares the environment for building edge applications
+
+set -e  # Exit on error
+
+# Colors for better readability
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 
 # Check if already initialized
 if [ -f ".devcontainer/.codespace-initialized" ]; then
-    echo "╔════════════════════════════════════════════╗"
-    echo "║   FastEdge Application Codespace Started   ║"
-    echo "╚════════════════════════════════════════════╝"
+    echo -e "${GREEN}╔════════════════════════════════════════════╗${NC}"
+    echo -e "${GREEN}║   FastEdge Codespace Ready                 ║${NC}"
+    echo -e "${GREEN}╚════════════════════════════════════════════╝${NC}"
     echo ""
-    echo "👋 Welcome back! Your FastEdge application codespace is up and running again."
+    echo "👋 Welcome back! Your FastEdge Codespace is running."
+    echo ""
+    echo "📚 Documentation:"
+    echo "   - Start here: context/CONTEXT_INDEX.md"
+    echo "   - Workflow: context/WORKFLOW_GUIDE.md"
+    echo "   - Skills: .claude/skills/"
+    echo ""
+    echo "🚀 Quick Actions:"
+    echo "   - Create app: Use MCP tool 'scaffold-fastedge-project'"
+    echo "   - Start debugger: cd fastedge-debugger && npm start"
+    echo "   - View ports: Check Ports panel (port 5179)"
     echo ""
     exit 0
 fi
 
-echo "╔════════════════════════════════════════════╗"
-echo "║   FastEdge Application Codespace Created   ║"
-echo "╚════════════════════════════════════════════╝"
+echo -e "${BLUE}╔════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║   Initializing FastEdge Codespace          ║${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════════╝${NC}"
 echo ""
-echo ""
-echo "Validating your environment..."
+
+# Function to print section header
+print_section() {
+    echo ""
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}$1${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+}
+
+# Validate environment
+print_section "🔍 Validating Environment"
 
 SECRET_SET=false
 
-# Check if GCORE_API_TOKEN is set
-if [ -z "$GCORE_API_TOKEN" ]; then
-    echo "⚠️  GCORE_API_TOKEN not found. Setting up secret..."
+# Check for FastEdge API credentials
+if [ -z "$GCORE_API_TOKEN" ] && [ -z "$FASTEDGE_API_KEY" ]; then
+    echo -e "${YELLOW}⚠️  FastEdge credentials not found${NC}"
     echo ""
+    echo "To deploy applications, you need to set FASTEDGE_API_KEY:"
+    echo ""
+    echo "Option 1: Use VSCode command"
+    echo "  1. Open Command Palette (Ctrl+Shift+P)"
+    echo "  2. Run: FastEdge (Setup Codespace Secrets)"
+    echo ""
+    echo "Option 2: Set manually"
+    echo "  1. Go to GitHub Settings → Codespaces"
+    echo "  2. Add secret: FASTEDGE_API_KEY"
+    echo "  3. Rebuild Codespace"
+    echo ""
+    echo -e "${YELLOW}Note: You can still create and test apps locally without credentials${NC}"
+    echo ""
+else
+    echo -e "${GREEN}✅ FastEdge credentials configured${NC}"
+    SECRET_SET=true
+fi
 
-    # Trigger the VS Code command
-    echo "fastedge.setup-codespace-secret" > .vscode/.fastedge-run-command
+# Initialize Docker for MCP server
+if [ -n "$GCORE_API_TOKEN" ] || [ -n "$FASTEDGE_API_KEY" ]; then
+    print_section "🔧 Initializing MCP Server"
 
-    # Wait for the secret to be created (poll for up to 2 minutes)
-    echo "Waiting for secret configuration to complete..."
-    TIMEOUT=120
-    ELAPSED=0
-    SECRET_SET=false
+    echo "Waiting for Docker daemon..."
+    DOCKER_TIMEOUT=30
+    DOCKER_ELAPSED=0
 
-    while [ $ELAPSED -lt $TIMEOUT ]; do
-        # Check if secret exists using gh CLI
-        if gh secret list --app codespaces --user --json name 2>/dev/null | grep -q "GCORE_API_TOKEN"; then
-            SECRET_SET=true
+    until docker info >/dev/null 2>&1; do
+        if [ $DOCKER_ELAPSED -ge $DOCKER_TIMEOUT ]; then
+            echo -e "${YELLOW}⚠️  Docker initialization timeout${NC}"
+            echo "   MCP server may not work until Docker is ready"
             break
         fi
-        sleep 2
-        ELAPSED=$((ELAPSED + 2))
+        sleep 1
+        DOCKER_ELAPSED=$((DOCKER_ELAPSED + 1))
         echo -n "."
     done
 
-    echo ""
-
-    if [ "$SECRET_SET" = true ]; then
-        echo "✅ Secret configured successfully!"
+    if docker info >/dev/null 2>&1; then
         echo ""
-        echo "⚠️  Note: You'll need to REBUILD the codespace for the secret to be available."
-        echo "    The secret is now saved but not yet loaded into this environment."
-        echo ""
-    else
-        echo "⏱️  Secret setup is taking longer than expected or was cancelled."
-        echo ""
-        echo "You can set it up later by:"
-        echo "1. Running: Command Palette > FastEdge (Setup Codespace Secret)"
-        echo "2. Or manually via GitHub repository Settings > Secrets > Codespaces"
-        echo ""
+        echo -e "${GREEN}✅ Docker daemon ready${NC}"
+        echo -e "${GREEN}✅ MCP server initialized${NC}"
     fi
 fi
 
-# Initialize MCP Server only if GCORE_API_TOKEN is set
-if [ -n "$GCORE_API_TOKEN" ]; then
-    # Ensure Docker daemon is ready for MCP server
-    echo ""
-    echo "🔧 Initializing FastEdge MCP Server..."
-    # Wait for Docker daemon to be ready (the MCP server uses Docker)
-    until docker info >/dev/null 2>&1; do
-        echo "Waiting for Docker daemon to be ready..."
-        sleep 1
-    done
-    echo "✅ Docker daemon ready"
-    echo ""
+# Display Codespace information
+print_section "📦 Codespace Information"
 
-    # Trigger VS Code to reload the window to ensure MCP servers restart
-    # This ensures that if Copilot Chat was already open, it reconnects to MCP servers
-    echo "🔄 Reloading VS Code window to initialize MCP servers..."
-    # echo "workbench.action.reloadWindow" > .vscode/.fastedge-run-command
-    sleep 2
-else
-    echo ""
-    if [ "$SECRET_SET" = true ]; then
-        echo "ℹ️  MCP server will be available after you rebuild the codespace"
-        echo "   (The secret is saved but not yet loaded into this session)"
-    else
-        echo "⚠️  Skipping MCP server initialization (GCORE_API_TOKEN not configured)"
-    fi
-    echo ""
-fi
-
-
-echo "🎉 Your FastEdge codespace is ready."
+echo "Available Tools:"
+echo "  • FastEdge MCP Server    - Build & deploy tools"
+echo "  • fastedge-debugger      - Local testing runtime (port 5179)"
+echo "  • FastEdge VSCode Ext    - IDE integration"
+echo "  • Node.js $(node --version)"
+echo "  • Rust $(rustc --version 2>/dev/null | cut -d' ' -f2 || echo 'N/A')"
 echo ""
 
-# Prompt user for setup method
-echo "How would you like to create your FastEdge application?"
+echo "Ports:"
+echo "  • 5179 - FastEdge Debugger (Web UI + REST API)"
+echo "  • 5178 - WebSocket logs (optional)"
 echo ""
-echo "1) Use AI Agent (Recommended) - Let GitHub Copilot guide you"
-echo "2) Setup Manually - Interactive CLI wizard"
-echo ""
-read -p "Enter your choice (1 or 2) [default: 1]: " setup_choice
-setup_choice=${setup_choice:-1}
 
-if [ "$setup_choice" = "1" ]; then
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "🤖 AI Agent Setup"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "To create your FastEdge application with AI assistance:"
-    echo ""
-    echo "1. Open GitHub Copilot Chat (Ctrl+Alt+I or Cmd+Shift+I)"
-    echo "2. Type: /createFastEdgeApp"
-    echo "3. Follow the prompts to configure your application"
-    echo ""
-    echo "The AI will help you choose the right template and"
-    echo "configure your application based on your needs."
-    echo ""
-    echo "If the command is not recognized, please start the MCP server (fastedge-assistant) first."
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-elif [ "$setup_choice" = "2" ]; then
-    echo ""
-    echo "Starting manual setup wizard..."
-    echo ""
-    npx create-fastedge-app . --codespaces
-else
-    echo ""
-    echo "Invalid choice. Please restart the codespace and try again."
-    exit 1
-fi
+echo "Documentation:"
+echo "  • claude.md                    - AI agent instructions"
+echo "  • context/CONTEXT_INDEX.md     - Documentation map (start here!)"
+echo "  • context/PROJECT_OVERVIEW.md  - What is this Codespace"
+echo "  • context/WORKFLOW_GUIDE.md    - Development workflow"
+echo "  • context/CODESPACE_GUIDE.md   - Codespace features"
+echo ""
+
+echo "Skills:"
+echo "  • .claude/skills/codespace-setup/      - Codespace configuration"
+echo "  • .claude/skills/fastedge-quickstart/  - Getting started guide"
+echo "  • More skills added when creating projects"
+echo ""
 
 # Mark as initialized
 touch .devcontainer/.codespace-initialized
 
-# Open the CODESPACE_README
-code CODESPACE_README.md
+# Display next steps for AI agents
+print_section "🤖 For AI Agents (Claude, Copilot, etc.)"
 
-# Open the README
-code README.md
+echo "I've prepared this Codespace for FastEdge development:"
+echo ""
+echo "1. Read Context:"
+echo "   • Start with: context/CONTEXT_INDEX.md (~100 lines)"
+echo "   • Then read: context/WORKFLOW_GUIDE.md"
+echo "   • Reference skills in .claude/skills/ as needed"
+echo ""
+echo "2. Create Application:"
+echo "   • Use MCP tool: scaffold-fastedge-project"
+echo "   • Choose template: http-base, http-react, http-react-hono, cdn-base"
+echo "   • Choose language: javascript, typescript, rust, assemblyscript"
+echo ""
+echo "3. Test Locally:"
+echo "   • Build: npm run build"
+echo "   • Start debugger: cd fastedge-debugger && npm start"
+echo "   • Test via: http://localhost:5179 or REST API"
+echo "   • See .claude/skills/fastedge-debugging/ for examples"
+echo ""
+echo "4. Deploy to Production:"
+echo "   • Use MCP tools: build-wasm, upload-binary, update-or-create-app"
+echo "   • See .claude/skills/fastedge-deployment/ for workflow"
+echo ""
+echo "Key Principle: ${GREEN}Create → Test → Deploy${NC}"
+echo "  Always test locally with debugger before deploying!"
+echo ""
 
+# Display next steps for humans
+print_section "👤 For Human Developers"
 
+echo "Welcome to FastEdge Codespace! 🚀"
+echo ""
+echo "Quick Start:"
+echo ""
+echo "1. Read Documentation:"
+echo "   ${BLUE}code context/CONTEXT_INDEX.md${NC}"
+echo ""
+echo "2. Create Your First App:"
+echo "   Ask Claude: \"Create a FastEdge HTTP application\""
+echo "   Or manually: ${BLUE}npx create-fastedge-app my-app${NC}"
+echo ""
+echo "3. Test Locally:"
+echo "   ${BLUE}cd fastedge-debugger && npm start${NC}"
+echo "   Open: http://localhost:5179"
+echo ""
+echo "4. Deploy:"
+echo "   Ask Claude: \"Deploy my application to FastEdge\""
+echo ""
 
+# Summary
+print_section "✨ Initialization Complete"
+
+echo -e "${GREEN}✅ Codespace is ready for FastEdge development!${NC}"
+echo ""
+echo "Next Steps:"
+echo "  1. Read: ${BLUE}context/CONTEXT_INDEX.md${NC} (documentation map)"
+echo "  2. Create: Use MCP or Claude to scaffold a project"
+echo "  3. Test: Start debugger and test locally"
+echo "  4. Deploy: Use MCP tools to deploy to production"
+echo ""
+echo "Documentation: ${BLUE}context/${NC}"
+echo "Skills: ${BLUE}.claude/skills/${NC}"
+echo "Tools: FastEdge MCP Server, debugger (port 5179), VSCode extension"
+echo ""
+echo -e "${GREEN}Happy coding! 🚀${NC}"
+echo ""

@@ -1,0 +1,14 @@
+name: fastedge-quickstart
+version: 1.0.0
+description: Getting started guide for building your first FastEdge application
+tags:
+  - quickstart
+  - getting-started
+  - tutorial
+  - first-app
+keywords:
+  - create
+  - test
+  - deploy
+  - hello world
+  - first application
